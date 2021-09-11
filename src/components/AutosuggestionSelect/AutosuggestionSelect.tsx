@@ -32,7 +32,7 @@ export function AutosuggestionSelect<ResponseType>({
   errorMessage = "Something went wrong",
   emptyResultsMessage = "No matches found",
 }: AutosuggestionSelectProps<ResponseType>) {
-  const containerSelectRef = useRef(null);
+  const containerSelectRef = useRef<HTMLDivElement>(null);
   const [query, setQuery, resetQuery] = useTextInput();
   const [isActive, toggle] = useToggle();
   const [selectedOptions, setSelectedOptions] = useState<string[]>(() =>
@@ -57,6 +57,8 @@ export function AutosuggestionSelect<ResponseType>({
   }, []);
 
   const handleCloseSelect = () => handleSelectCleanup(() => toggle(false));
+
+  const handleOpenSelect = () => handleSelectCleanup(toggle);
 
   useOnClickOutside(containerSelectRef, handleCloseSelect);
   useKeyboardEffect(KEY_NAME, handleCloseSelect);
@@ -88,7 +90,7 @@ export function AutosuggestionSelect<ResponseType>({
           className={cn(styles.trigger, {
             [styles["trigger--active"]]: isActive,
           })}
-          onClick={() => handleSelectCleanup(toggle)}
+          onClick={handleOpenSelect}
         >
           {label}
           <span className={styles.counter}>{selectedOptions.length}</span>
@@ -96,7 +98,11 @@ export function AutosuggestionSelect<ResponseType>({
         </button>
         {isActive && (
           <div className={styles.options}>
-            <Searcher name={name} query={query} onChange={setQuery} />
+            <Searcher
+              name={name}
+              query={query}
+              onChange={setQuery}
+            />
             {placeholder ? (
               <div className={styles.placeholder}>{placeholder}</div>
             ) : (
