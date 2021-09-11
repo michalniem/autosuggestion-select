@@ -1,0 +1,24 @@
+.button {
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  cursor: pointer;
+
+  &--full {
+    background-color: black;
+    color: white;
+  }
+
+  &--bare {
+    color: black;
+    border-top: 1px solid black;
+  }
+
+  & [disabled],
+  &:disabled {
+    opacity: 0.5;
+    cursor: auto;
+  }
+}

@@ -1,24 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { AutosuggestionSelect } from "./components/AutosuggestionSelect/AutosuggestionSelect";
+import {
+  OptionType,
+} from "./components/AutosuggestionSelect/types";
+
+export type ResponseType = { name: string }[];
+
+const API_URL = `http://universities.hipolabs.com`;
+
+const updateSomeStore = (options: string[]) => {
+  console.log(options, "updaded in the store");
+};
+
+const responseExtractor = (
+  response: { name: string }[]
+): OptionType[] => {
+  const responseMap = response.map(({ name }) => name);
+  const uniqueOptions = Array.from(new Set(responseMap)); // `http://universities.hipolabs.com` API has some duplicats which cause key errors. I've used Set to make every option unique.
+
+  return uniqueOptions;
+};
+
+const getUrl = (query: string) => `${API_URL}/search?name=${query}`;
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AutosuggestionSelect<ResponseType>
+        name="universities"
+        label="Universities"
+        getUrl={getUrl}
+        responseExtractor={responseExtractor}
+        onOptionCheck={updateSomeStore}
+        emptyResultsMessage="No matched universities found"
+      />
     </div>
   );
 }

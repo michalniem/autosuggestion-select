@@ -1,0 +1,14 @@
+.label {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+
+  &--checked {
+    font-weight: 700;
+  }
+}

@@ -1,0 +1,28 @@
+.list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.item {
+  position: relative;
+  cursor: pointer;
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: calc(100% - 24px);
+    height: 1px;
+    background-color: var(--theme-color-secondary);
+    top: 0;
+    left: 24px;
+  }
+
+  &:first-of-type::after {
+    width: 100%;
+    left: 0;
+  }
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
