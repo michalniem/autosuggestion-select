@@ -1,15 +1,14 @@
-import { ChangeEvent, useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import cn from "classnames";
 
 import styles from "./index.module.scss";
 import arrow from "../../assets/svg/arrow.svg";
-import Button, { ButtonType } from "../Button/Button";
+import { Button } from "../Button/Button";
 import {
   removeItemFromLocalStorage,
   setItemInLocalStorage,
   getItemFromLocalStorage,
 } from "../../services/sessionStorage";
-import { AutosuggestionSelectProps } from "./types";
 import { useTextInput } from "../../hooks/useTextInput";
 import { useToggle } from "../../hooks/useToggle";
 import { useOnClickOutside } from "../../hooks/onOutsideClick";
@@ -20,8 +19,22 @@ import { List } from "../List/List";
 import { CheckboxItem } from "../List/CheckboxItem/CheckboxItem";
 import { useKeyboardEffect } from "../../hooks/useKeyboardEffect";
 
+import type { ChangeEvent } from "react";
+
 const DEBOUNCE_DELAY = 400;
 const KEY_NAME = "Escape";
+
+export type OptionType = string;
+
+type Props<ResponseType> = {
+  name: string;
+  label: string;
+  errorMessage?: string;
+  emptyResultsMessage?: string;
+  onOptionCheck: (options: OptionType[]) => void;
+  getUrl: (query: string) => string;
+  responseExtractor: (response: ResponseType) => OptionType[];
+};
 
 export function AutosuggestionSelect<ResponseType>({
   name,
@@ -31,7 +44,7 @@ export function AutosuggestionSelect<ResponseType>({
   onOptionCheck,
   errorMessage = "Something went wrong",
   emptyResultsMessage = "No matches found",
-}: AutosuggestionSelectProps<ResponseType>) {
+}: Props<ResponseType>) {
   const containerSelectRef = useRef<HTMLDivElement>(null);
   const [query, setQuery, resetQuery] = useTextInput();
   const [isActive, toggle] = useToggle();
@@ -53,7 +66,7 @@ export function AutosuggestionSelect<ResponseType>({
   const handleSelectCleanup = useCallback((callback?: () => void) => {
     reset();
     resetQuery();
-    callback && callback();
+    callback?.();
   }, []);
 
   const handleCloseSelect = () => handleSelectCleanup(() => toggle(false));
@@ -98,11 +111,9 @@ export function AutosuggestionSelect<ResponseType>({
         </button>
         {isActive && (
           <div className={styles.options}>
-            <Searcher
-              name={name}
-              query={query}
-              onChange={setQuery}
-            />
+            <div className={styles.searcher}>
+              <Searcher name={name} query={query} onChange={setQuery} />
+            </div>
             {placeholder ? (
               <div className={styles.placeholder}>{placeholder}</div>
             ) : (
@@ -120,13 +131,13 @@ export function AutosuggestionSelect<ResponseType>({
             <div className={styles.footer}>
               <Button
                 text="Reset"
-                variant={ButtonType.Bare}
+                variant="bare"
                 onClick={handleResetClick}
                 disabled={!Boolean(selectedOptions.length)}
               />
               <Button
                 text="Save"
-                variant={ButtonType.Full}
+                variant="full"
                 onClick={handleCloseSelect}
                 disabled={!Boolean(selectedOptions.length)}
               />

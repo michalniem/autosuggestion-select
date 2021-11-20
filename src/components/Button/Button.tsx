@@ -1,26 +1,24 @@
-import { ReactNode } from "react";
 import cn from "classnames";
 
 import styles from "./index.module.scss";
 
-export enum ButtonType {
-  Full = "full",
-  Bare = "bare",
-}
+import type { ReactNode } from "react";
 
-interface ButtonProps {
+export type ButtonType = "full" | "bare";
+
+type Props = {
   text: ReactNode;
   variant?: ButtonType;
   onClick: () => void;
   disabled?: boolean;
-}
+};
 
-function Button({
+export const Button = ({
   text,
-  variant = ButtonType.Full,
+  variant = "full",
   onClick,
   disabled = false,
-}: ButtonProps) {
+}: Props) => {
   return (
     <button
       className={cn(styles.button, styles[`button--${variant}`])}
@@ -30,6 +28,4 @@ function Button({
       {text}
     </button>
   );
-}
-
-export default Button;
+};

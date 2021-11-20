@@ -1,11 +1,19 @@
 import styles from "./index.module.scss";
-import { ListProps } from "./types";
+
+import type { ReactElement } from "react";
+
+type Props<T> = {
+  options: T[];
+  renderOption: (option: T) => ReactElement;
+  placeholder?: string;
+}
+
 
 export function List<T extends string | number>({
   options,
   renderOption,
   placeholder,
-}: ListProps<T>) {
+}: Props<T>) {
   return (
     <ul className={styles.list}>
       {options.map((option) => (

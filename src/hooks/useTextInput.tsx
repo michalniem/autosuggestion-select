@@ -1,10 +1,10 @@
-import { ChangeEvent, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 
-export function useTextInput(): [
-  string,
-  (e: ChangeEvent<HTMLInputElement>) => void,
-  () => void
-] {
+import type { ChangeEvent } from "react";
+
+type Output = [string, (e: ChangeEvent<HTMLInputElement>) => void, () => void];
+
+export function useTextInput(): Output {
   const [value, setValue] = useState("");
 
   const handleSetValue = useCallback(

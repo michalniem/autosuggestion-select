@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { OptionType } from "../components/AutosuggestionSelect/types";
 
-type UseDynamicOptionsType<T> = {
+import type { OptionType } from "../components/AutosuggestionSelect/AutosuggestionSelect";
+
+type Input<T> = {
   ebabled: boolean;
   url: string;
   initialState: () => string[];
@@ -10,7 +11,11 @@ type UseDynamicOptionsType<T> = {
   emptyResultsMessage: string;
 };
 
-type UseDynamicOptionsReturnType = [OptionType[], string, () => void];
+type Data = OptionType[];
+type Placeholder = string;
+type Reset = VoidFunction;
+
+type Output = [Data, Placeholder, Reset];
 
 export function useDynamicOptions<T>({
   ebabled,
@@ -19,7 +24,7 @@ export function useDynamicOptions<T>({
   responseExtractor,
   errorMessage,
   emptyResultsMessage,
-}: UseDynamicOptionsType<T>): UseDynamicOptionsReturnType {
+}: Input<T>): Output {
   const [options, setOptions] = useState(initialState);
   const [placeholder, setPlaceholder] = useState("");
 
@@ -42,14 +47,14 @@ export function useDynamicOptions<T>({
           }
         } catch {
           setPlaceholder(errorMessage);
-          setOptions([])
+          setOptions([]);
         }
       })();
     } else {
       setPlaceholder("");
-      setOptions([])
+      setOptions([]);
     }
-  }, [ebabled, url]);
+  }, [ebabled, emptyResultsMessage, errorMessage, responseExtractor, url]);
 
   return [options, placeholder, reset];
 }

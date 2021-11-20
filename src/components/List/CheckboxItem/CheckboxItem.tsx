@@ -1,11 +1,18 @@
 import cn from "classnames";
 
 import styles from "./index.module.scss";
-import { CheckboxItemProps } from "./types";
 
 import tick from "../../../assets/svg/tick.svg";
 
-export function CheckboxItem({ name, onClick, isChecked }: CheckboxItemProps) {
+import type { ChangeEvent } from "react";
+
+type Props = {
+  name: string;
+  onClick: (e: ChangeEvent<HTMLInputElement>) => void;
+  isChecked: boolean;
+};
+
+export const CheckboxItem = ({ name, onClick, isChecked }: Props) => {
   return (
     <label
       className={cn(styles.label, {
@@ -23,4 +30,4 @@ export function CheckboxItem({ name, onClick, isChecked }: CheckboxItemProps) {
       {isChecked && <img src={tick} alt="tick icon" />}
     </label>
   );
-}
+};
